@@ -39,8 +39,9 @@ app.post('/api/courses', (request, response) => {
     });
 
     
-    const result = schema.validate(request.body); 
-    console.log(result) 
+    //Validate
+    result = validateCourse(request.body);
+
     if(result.error) {
         response.status(400).send(result.error.details[0].message)
         return;
