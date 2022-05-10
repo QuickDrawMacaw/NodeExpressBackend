@@ -63,14 +63,8 @@ app.put('/api/courses/:id', (request, response) => {
 
 
     //Validate
-    const schema = Joi.object({
-        name: Joi.string()
-            .min(3)
-            .required()
-    });
+    result = validateCourse(request.body);
 
-    const result = schema.validate(request.body); 
-    console.log(result) 
     if(result.error) {
         response.status(400).send(result.error.details[0].message)
         return;
@@ -86,10 +80,12 @@ app.put('/api/courses/:id', (request, response) => {
 
 function validateCourse(course){
     const schema = Joi.object({
-        name: Joi.string().min(3).required()
+        name: Joi.string()
+            .min(3)
+            .required()
     });
 
-    return schema.validate(course.body);
+    return schema.validate(course); 
 }
 
 //PORT 
