@@ -52,7 +52,6 @@ app.put('/api/courses/:id', (request, response) => {
     const course = courses.find(c => c.id === parseInt(request.params.id))
     if(!course) // 404
     response.status(404).send('The course with the given id was not found.');
-    //response.send(course);
 
 
     //Validate
@@ -68,6 +67,22 @@ app.put('/api/courses/:id', (request, response) => {
     response.send(course);
 
 
+})
+
+app.delete('/api/courses/:id', (request, response) => {
+    //Look up the course
+    const course = courses.find(c => c.id === parseInt(request.params.id))
+
+    //Not existing, return 404
+    if(!course) // 404
+    response.status(404).send('The course with the given id was not found.');
+
+    //Delete
+    const index = courses.indexOf(course);
+    courses.splice(index, 1); //(the course id, remove only one object)
+
+    //Return the same course
+    response.send(course)
 })
 
 function validateCourse(course){
