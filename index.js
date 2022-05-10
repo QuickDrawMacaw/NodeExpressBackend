@@ -34,11 +34,8 @@ app.post('/api/courses', (request, response) => {
     
     //Validate
     const {error} = validateCourse(request.body);
-    if(error) {
-        response.status(400).send(error.details[0].message)
-        return;
-    }
-
+    if(error) return response.status(400).send(error.details[0].message);
+         
     const course = {
         id: courses.length + 1,
         name: request.body.name
@@ -50,16 +47,18 @@ app.post('/api/courses', (request, response) => {
 app.put('/api/courses/:id', (request, response) => {
     
     const course = courses.find(c => c.id === parseInt(request.params.id))
-    if(!course) // 404
-    response.status(404).send('The course with the given id was not found.');
+    if(!course) return response.status(404).send('The course with the given id was not found.');
+
+    
+    
 
 
     //Validate
     const {error} = validateCourse(request.body);
-    if(error) {
-        response.status(400).send(error.details[0].message)
-        return;
-    }
+    if(error) return response.status(400).send(error.details[0].message)
+        
+     
+    
 
     //Update course
     course.name = request.body.name;
@@ -74,8 +73,8 @@ app.delete('/api/courses/:id', (request, response) => {
     const course = courses.find(c => c.id === parseInt(request.params.id))
 
     //Not existing, return 404
-    if(!course) // 404
-    response.status(404).send('The course with the given id was not found.');
+    if(!course) return response.status(404).send('The course with the given id was not found.');
+
 
     //Delete
     const index = courses.indexOf(course);
