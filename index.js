@@ -1,5 +1,6 @@
 const express = require('express');
 const req = require('express/lib/request');
+const res = require('express/lib/response');
 const { json } = require('express/lib/response');
 const app = express();
 const Joi = require('joi');
@@ -29,22 +30,28 @@ app.get('/api/courses/:id', (request, response) => {
     response.send(course);
 });
 
-app.post('/api/courses', (req, res) => {
-    //Validate
-    const { error } = validateCourse(req.body);
-    //If invalid, return 4-- - Bad Request
+app.post('/api/courses', (request, response) => {
 
-    if(error) {
-        res.status(400).send(error.details[0].message)
+    const schema = Joi.object({
+        name: Joi.string()
+            .min(3)
+            .required()
+    });
+
+    
+    const result = schema.validate(request.body); 
+    console.log(result) 
+    if(result.error) {
+        response.status(400).send(result.error.details[0].message)
         return;
     }
 
     const course = {
         id: courses.length + 1,
-        name: req.body.name
+        name: request.body.name
     };
     courses.push(course);
-    res.send(course);
+    response.send(course);
 });
 
 app.put('/api/courses/:id', (request, response) => {
@@ -56,11 +63,13 @@ app.put('/api/courses/:id', (request, response) => {
 
 
     //Validate
-    const { error } = validateCourse(request.body);
-    //If invalid, return 4-- - Bad Request
+    const schema = Joi.object({
+        name: Joi.string().min(3).required()
+    });
 
-    if(error) {
-        response.status(400).send(error.details[0].message)
+    const result = schema.validate(course.body);
+    if(result.error) {
+        response.status(400).send(result.error.details[0].message);
         return;
     }
 
