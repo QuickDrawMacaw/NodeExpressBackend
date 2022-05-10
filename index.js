@@ -55,21 +55,24 @@ app.post('/api/courses', (request, response) => {
 });
 
 app.put('/api/courses/:id', (request, response) => {
-
+    
     const course = courses.find(c => c.id === parseInt(request.params.id))
     if(!course) // 404
     response.status(404).send('The course with the given id was not found.');
-    response.send(course);
+    //response.send(course);
 
 
     //Validate
     const schema = Joi.object({
-        name: Joi.string().min(3).required()
+        name: Joi.string()
+            .min(3)
+            .required()
     });
 
-    const result = schema.validate(course.body);
+    const result = schema.validate(request.body); 
+    console.log(result) 
     if(result.error) {
-        response.status(400).send(result.error.details[0].message);
+        response.status(400).send(result.error.details[0].message)
         return;
     }
 
