@@ -1,22 +1,27 @@
 const express = require('express');
 const router = express.Router(); 
+const Joi = require('joi');
 
+const courses = [
+    { id: 1, name: 'course1'},
+    { id: 2, name: 'course2'},
+    { id: 3, name: 'course3'},
+]
 
-
-router.get('/api/courses', (request, response) => {
+router.get('/', (request, response) => {
     response.send(courses);
 });
 
 // /api/courses
 
-router.get('/api/courses/:id', (request, response) => {
+router.get('/:id', (request, response) => {
     const course = courses.find(c => c.id === parseInt(request.params.id))
     if(!course) // 404
     response.status(404).send('The course with the given id was not found.');
     response.send(course);
 });
 
-router.post('/api/courses', (request, response) => {
+router.post('/', (request, response) => {
     
     //Validate
     const {error} = validateCourse(request.body);
@@ -30,7 +35,7 @@ router.post('/api/courses', (request, response) => {
     response.send(course);
 });
 
-router.put('/api/courses/:id', (request, response) => {
+router.put('/:id', (request, response) => {
     
     const course = courses.find(c => c.id === parseInt(request.params.id))
     if(!course) return response.status(404).send('The course with the given id was not found.');
@@ -45,7 +50,7 @@ router.put('/api/courses/:id', (request, response) => {
     response.send(course);
 })
 
-router.delete('/api/courses/:id', (request, response) => {
+router.delete('/:id', (request, response) => {
     //Look up the course
     const course = courses.find(c => c.id === parseInt(request.params.id))
 
